@@ -75,26 +75,6 @@ Features:
 - Protected Routes
 - Role Based Authorization
 
----
-
-## Database Configuration
-
-Configure your MySQL credentials inside:
-
-```properties
-application.properties
-```
-
-Example:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/hiresphere_db
-spring.datasource.username=your_username
-spring.datasource.password=your_password
-```
-
----
-
 ## Getting Started
 
 ### Clone Repository
@@ -123,10 +103,7 @@ mvn spring-boot:run
 - Job Recommendation System
 - Email Notifications
 - Admin Dashboard
-- Interview Scheduling System
-
----
-
+  
 ## Author
 
 ### Nilesh Borchate
