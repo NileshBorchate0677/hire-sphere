@@ -3,6 +3,7 @@ package com.hiresphere.hiresphere.Auth.Entity;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,13 +18,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Entity  
+
+@Entity 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class Users implements UserDetails {
 	
+	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
@@ -38,7 +48,7 @@ public class Users implements UserDetails {
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
-	private UserRoles role;
+	private UserRoles  role;
 	
 	private LocalDateTime createdAt;
 	
