@@ -13,8 +13,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import com.hiresphere.hiresphere.Auth.Dto.RegisterUserRequestDto;
 import com.hiresphere.hiresphere.Auth.Dto.UserDto;
+
 import com.hiresphere.hiresphere.Auth.Entity.Users;
 import com.hiresphere.hiresphere.Auth.Enums.UserRoles;
 import com.hiresphere.hiresphere.Auth.Mapper.AuthMapper;
@@ -74,15 +76,19 @@ public class UserService implements UserDetailsService {
 		
 		//give Role for only User
 		
-		if(requestDto.getRole() == UserRoles.ROLE_JOB_SEEKER){
+		if(requestDto.getRole() == UserRoles.JOB_SEEKER){
 
-		    newUser.setRole(UserRoles.ROLE_JOB_SEEKER);
+		    newUser.setRole(UserRoles.JOB_SEEKER);
 
 		}
-		else if(requestDto.getRole() == UserRoles.ROLE_RECRUITER){
+		else if(requestDto.getRole() == UserRoles.RECRUITER){
 
-		    newUser.setRole(UserRoles.ROLE_RECRUITER);
+		    newUser.setRole(UserRoles.RECRUITER);
 
+		}
+		else if(requestDto.getRole() == UserRoles.ADMIN){
+
+		    newUser.setRole(UserRoles.ADMIN);
 		}
 		else{
 
@@ -94,7 +100,12 @@ public class UserService implements UserDetailsService {
 		return AuthMapper.maptoUserDto(userSaved);
 		
 	}
-		
+
+
+     
+	
+	
+		 
 }
 
 

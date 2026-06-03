@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponceDto {
+public class UserLoginResponceDto {
 
 	private Long id; 
 	

@@ -1,7 +1,5 @@
 package com.hiresphere.hiresphere.Auth.Dto;
 
-import javax.management.relation.Role;
-
 import com.hiresphere.hiresphere.Auth.Enums.UserRoles;
 
 import jakarta.validation.constraints.NotBlank;

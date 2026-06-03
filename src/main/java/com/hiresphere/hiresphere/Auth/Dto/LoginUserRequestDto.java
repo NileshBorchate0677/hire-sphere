@@ -16,10 +16,10 @@ public class LoginUserRequestDto {
 
 	@NotBlank(message = "Email is required") 
 	@Email(message = "Invalid Email format")
-	private String Email;
+	private String email;
 	
 	@NotBlank(message = "Passwords is required")
-	private String Password;
+	private String password;
 	
 	
 
