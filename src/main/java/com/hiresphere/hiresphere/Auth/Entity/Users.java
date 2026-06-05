@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.hiresphere.hiresphere.Auth.Enums.UserRoles;
+import com.hiresphere.hiresphere.Recruiter.Entity.RecruiterProfile;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +19,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,10 +52,14 @@ public class Users implements UserDetails {
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private UserRoles  role;
 	
+	@CreationTimestamp
 	private LocalDateTime createdAt;
 	
+	@OneToOne(mappedBy = "user")
+	private RecruiterProfile recruiterProfile;
 	
 	
 	
@@ -61,7 +68,7 @@ public class Users implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 
 	    return List.of(
-	            new SimpleGrantedAuthority(role.name())
+	        new SimpleGrantedAuthority("ROLE_" + role.name())
 	    );
 	}
 

@@ -99,6 +99,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatusCode());
     }
 
+    
+    @ExceptionHandler(EmailAlreadyExistException.class)
+    public ResponseEntity<ApiError> handleEmailAlreadyExistsException(
+            EmailAlreadyExistException ex) {
+
+        ApiError apiError = new ApiError(
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST
+        ); 
+
+        return new ResponseEntity<>(apiError, apiError.getStatusCode());
+    }
+    
+}
  
   
-}

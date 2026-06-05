@@ -21,6 +21,7 @@ import com.hiresphere.hiresphere.Auth.Entity.Users;
 import com.hiresphere.hiresphere.Auth.Enums.UserRoles;
 import com.hiresphere.hiresphere.Auth.Mapper.AuthMapper;
 import com.hiresphere.hiresphere.Auth.Repository.UserRepository;
+import com.hiresphere.hiresphere.Exception.EmailAlreadyExistException;
 
 
 import lombok.RequiredArgsConstructor;
@@ -65,8 +66,7 @@ public class UserService implements UserDetailsService {
 		
 		if(user.isPresent())
 		{
-			throw new BadCredentialsException("The Email is Already Exist"
-					+ requestDto.getEmail());
+			throw new EmailAlreadyExistException("Email Already Exits. Please register with another email ");
 		} 
 		
 		// encode the password
