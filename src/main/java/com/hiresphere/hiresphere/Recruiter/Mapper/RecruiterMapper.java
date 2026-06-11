@@ -1,5 +1,6 @@
 package com.hiresphere.hiresphere.Recruiter.Mapper;
 
+import com.hiresphere.hiresphere.Recruiter.DTO.GetRecruiterProfileResponseDto;
 import com.hiresphere.hiresphere.Recruiter.DTO.RecruiterProfileRequestDto;
 import com.hiresphere.hiresphere.Recruiter.DTO.RecruiterProfileResponseDto;
 import com.hiresphere.hiresphere.Recruiter.Entity.RecruiterProfile;
@@ -40,6 +41,49 @@ public class RecruiterMapper {
 		
 		return Dto;
 	}
+	
+	
+	public static GetRecruiterProfileResponseDto
+	mapToGetRecruiterProfileDetailsDto(
+	        RecruiterProfile profile)
+	{
+		GetRecruiterProfileResponseDto dto = new GetRecruiterProfileResponseDto();
+
+	    dto.setId(profile.getRecruiter_Profile_id());
+
+	    dto.setRecruiterName(
+	            profile.getUser().getName());
+
+	    dto.setCompanyName(
+	            profile.getCompanyName());
+
+	    dto.setCompanyDescription(
+	            profile.getCompanyDescription());
+
+	    dto.setWebsite(
+	            profile.getWebsite());
+
+	    dto.setLocation(
+	            profile.getLocation());
+
+	    dto.setIndustry(
+	            profile.getIndustry());
+
+	    dto.setCompanySize(
+	            profile.getCompanySize());
+
+	    dto.setCompanyEmail(
+	            profile.getCompanyEmail());
+
+	    dto.setCompanyPhone(
+	            profile.getCompanyPhone());
+
+	    dto.setCreatedAt(
+	            profile.getCreatedAt());
+
+	    return dto;
+	}
+	
 	 
 	
 }

@@ -1,5 +1,7 @@
 package com.hiresphere.hiresphere.Recruiter.Repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,9 +12,10 @@ import com.hiresphere.hiresphere.Recruiter.Entity.RecruiterProfile;
 public interface RecruiterRepository  extends JpaRepository<RecruiterProfile, Long>{
 
 	boolean existsByUser(Users user);
- 
-	boolean existsByCompanyEmail(String companyEmail);
+  
+ 	Optional<RecruiterProfile> findByUser(Users user);
+ 	
 
-	boolean existsByCompanyPhone(String companyPhone);
-	
+	 
 }
+  

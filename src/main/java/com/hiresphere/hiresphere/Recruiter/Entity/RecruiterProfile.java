@@ -45,10 +45,10 @@ public class RecruiterProfile {
 	@Column(nullable = false)
 	private Integer companySize; 
 	
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String companyEmail;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String companyPhone;
 	
 
