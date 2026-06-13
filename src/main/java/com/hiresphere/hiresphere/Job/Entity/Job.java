@@ -2,9 +2,11 @@ package com.hiresphere.hiresphere.Job.Entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.hiresphere.hiresphere.Application.Entity.Application;
 import com.hiresphere.hiresphere.Job.Enums.JobStatus;
 import com.hiresphere.hiresphere.Job.Enums.JobType;
 import com.hiresphere.hiresphere.Recruiter.Entity.RecruiterProfile;
@@ -67,4 +69,9 @@ public class Job {
             nullable = false
     )
     private RecruiterProfile recruiterProfile;
+    
+    
+    
+    @OneToMany(mappedBy = "job")
+    private List<Application> applications;
 }

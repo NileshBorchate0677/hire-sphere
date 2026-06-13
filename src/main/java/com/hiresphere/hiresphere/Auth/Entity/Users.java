@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.hiresphere.hiresphere.Auth.Enums.UserRoles;
+import com.hiresphere.hiresphere.JobSeeker.Entity.JobSeekerProfile;
 import com.hiresphere.hiresphere.Recruiter.Entity.RecruiterProfile;
 
 import jakarta.persistence.Column;
@@ -61,6 +62,8 @@ public class Users implements UserDetails {
 	@OneToOne(mappedBy = "user")
 	private RecruiterProfile recruiterProfile;
 	
+	@OneToOne(mappedBy = "user")
+	private JobSeekerProfile jobSeekerProfile;
 	
 	
 
