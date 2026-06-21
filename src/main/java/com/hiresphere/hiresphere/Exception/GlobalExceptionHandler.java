@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.security.core.AuthenticationException;
 
-
 import io.jsonwebtoken.JwtException;
 
 @RestControllerAdvice 
@@ -59,9 +58,13 @@ public class GlobalExceptionHandler {
     }
 
     
-    //Handled JWT Exception
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ApiError> handleJwtException(JwtException ex) {
+
+        // TEMP DEBUG - नंतर काढून टाक
+        System.out.println("JWT Exception Type: " + ex.getClass().getName());
+        System.out.println("JWT Exception Message: " + ex.getMessage());
+        ex.printStackTrace();
 
         ApiError apiError = new ApiError(
                 "Invalid or expired JWT token",

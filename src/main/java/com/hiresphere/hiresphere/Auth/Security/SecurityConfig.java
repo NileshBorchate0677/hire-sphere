@@ -10,16 +10,22 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+
 public class SecurityConfig {
 
     private final JwtAtenticationFilter jwtAtenticationFilter;
  
+    
     
     @Bean
     AuthenticationManager authenticationManager(
@@ -29,6 +35,9 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
+    
+    
+    
     @Bean
     SecurityFilterChain securityFilterChain( 
             HttpSecurity http)
@@ -47,20 +56,23 @@ public class SecurityConfig {
             
             .authorizeHttpRequests(auth -> auth
 
-                    .requestMatchers("/user/auth/**")
-                    .permitAll()
+                    .requestMatchers(
+                            "/user/auth/register",
+                            "/user/auth/login",
+                            "/user/auth/refresh"
+                    ).permitAll()
 
-                    .requestMatchers("/admin/**")
-                    .hasAuthority("ROLE_ADMIN")
+                    .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers("/recruiter/**").hasAuthority("ROLE_RECRUITER")
+                    .requestMatchers("/api/job-seeker/**").hasAuthority("ROLE_JOB_SEEKER")
 
-                    .requestMatchers("/recruiter/**")
-                    .hasAuthority("ROLE_RECRUITER")
+                    .requestMatchers(
+                            "/user/auth/logout",
+                            "/user/auth/logoutAll",
+                            "/user/auth/change-password"
+                    ).authenticated()
 
-                    .requestMatchers("/api/job-seeker/**")
-                    .hasAuthority("ROLE_JOB_SEEKER")
-
-                    .anyRequest()
-                    .authenticated()
+                    .anyRequest().authenticated()
             )
 
             .addFilterBefore(
@@ -68,4 +80,35 @@ public class SecurityConfig {
                     UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+    
+    
+    
+    
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(
+                List.of(
+                        "http://localhost:5173",
+                        "http://localhost:5174"
+                ));
+
+        configuration.setAllowedMethods(
+                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        configuration.setAllowedHeaders(
+                List.of("*"));
+
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+    
 }

@@ -18,7 +18,7 @@ public class ApplicationMapper {
                 new MyApplicationResponseDto();
 
         dto.setApplicationId(
-                application.getApplicationId());
+                application.getId());
 
         dto.setJobId(
                 application.getJob().getId());
@@ -53,7 +53,7 @@ public class ApplicationMapper {
                 new ApplicantResponseDto();
 
         dto.setApplicationId(
-                application.getApplicationId());
+                application.getId());
 
         dto.setApplicantName(
                 application.getJobSeekerProfile()

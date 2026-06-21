@@ -3,10 +3,12 @@ package com.hiresphere.hiresphere.Auth.Controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hiresphere.hiresphere.Auth.Dto.ChangePasswordRequestDto;
 import com.hiresphere.hiresphere.Auth.Dto.LoginUserRequestDto;
 import com.hiresphere.hiresphere.Auth.Dto.RegisterUserRequestDto;
 import com.hiresphere.hiresphere.Auth.Dto.UserDto;
@@ -50,7 +52,7 @@ public class UserController {
 
 	
 	
-	//2) Login API for Job_SeeksNAd the Recruiter
+	//2) Login API for Job_Seeker and the Recruiter
 	
 	@PostMapping("/login")
 	public ResponseEntity<UserLoginResponceDto> userSignIn(@Valid @RequestBody LoginUserRequestDto loginUserRequestDto,
@@ -79,7 +81,7 @@ public class UserController {
 	
 	
 	
-	// REST APi for the Refresh the AccessToken
+	//3) REST APi for the Refresh the AccessToken
 	
 	@PostMapping("/refresh")
 	public ResponseEntity<UserLoginResponceDto> refresh(HttpServletRequest request)
@@ -100,6 +102,44 @@ public class UserController {
 	UserLoginResponceDto	 loginResponceDto=authService.refresh(refreshToken);
 		
 		return ResponseEntity.ok(loginResponceDto);
+	}
+	
+	
+	
+	
+	// 4)logout the current session of user
+	
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout(HttpServletRequest request , HttpServletResponse response)
+	{
+	    authService.logout(request, response);
+	     
+	    return ResponseEntity.ok( "Logout Successfully");  
+	}
+	
+	
+	// 5) logout the user from All devices
+	
+	@PostMapping("/logoutAll")
+	public ResponseEntity<String>logoutAllDevices(HttpServletResponse response)
+	{
+	    authService.logoutAllDevices( response);
+
+	    return ResponseEntity.ok( "Logout From All Devices Successfully");
+	}
+	
+	
+	
+	
+	
+	//6) Change the Password of User 
+	
+	@PutMapping("/change-password")
+	public ResponseEntity<String>changePassword(  @Valid @RequestBody ChangePasswordRequestDto dto)
+	{
+	    authService.changePassword(dto);
+
+	    return ResponseEntity.ok( "Password Changed Successfully");
 	}
 	
 	

@@ -22,11 +22,11 @@ public class RegisterUserRequestDto {
 	
 	@Email(message = "Invalid Email Format")
 	@NotBlank(message = "email is required")
-	private String Email;
+	private String email;
 	
 	@NotBlank(message = "password is required")
 	@Size(min =8, message = "Password must be At least 8 chacters ")
-	private String Password;
+	private String password;
 	
 	@NotNull(message = "the role is required")
 	private UserRoles role;

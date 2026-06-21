@@ -30,7 +30,7 @@ public class Application {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long applicationId;
+    private Long Id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)

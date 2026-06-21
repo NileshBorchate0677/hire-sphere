@@ -28,11 +28,13 @@ public class JwtAtenticationFilter extends OncePerRequestFilter {
 	    
 	    
 	    
-	    @Override
-	    protected boolean shouldNotFilter(HttpServletRequest request) {
-	        String path = request.getServletPath();
-	        return path.startsWith("/auth/");
-	    }
+	 @Override
+	 protected boolean shouldNotFilter(HttpServletRequest request) {
+	     String path = request.getServletPath();
+	     return path.equals("/user/auth/register")
+	         || path.equals("/user/auth/login")
+	         || path.equals("/user/auth/refresh");
+	 }
 	
 	
 	
@@ -82,11 +84,14 @@ public class JwtAtenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
-            
-        } catch (Exception e) {
-            e.printStackTrace(); // DEBUG purpose
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
+		} catch (Exception e) {
+		    e.printStackTrace(); // DEBUG purpose
+		    SecurityContextHolder.clearContext();
+		    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		    response.setContentType("application/json");
+		    response.getWriter().write("{\"error\":\"Invalid or expired access token\"}");
+		    return;
+		}
 		
 		
 		

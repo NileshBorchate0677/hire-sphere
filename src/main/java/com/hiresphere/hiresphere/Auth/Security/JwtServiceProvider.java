@@ -36,34 +36,29 @@ public class JwtServiceProvider {
 	
 	public String genrateAccsessToken(Users user)
 	{
-		return Jwts.builder()
-				.subject(user.getUserId().toString())
-				.claim("Username", user.getUsername())
-				.claim("Role", user.getRole())
-				.issuedAt(new Date())
-				.expiration(new Date(System.currentTimeMillis()+ 1000*60*15))
-				.signWith(getSecretKey())
-				.compact();
-		
+	    return Jwts.builder()
+	            .subject(user.getUserId().toString())
+	            .claim("Username", user.getUsername())
+	            .claim("Role", user.getRole())
+	            .issuedAt(new Date())
+	            .expiration(new Date(System.currentTimeMillis() + 1000L*60*15))
+	            .signWith(getSecretKey())
+	            .compact();
 	}
-	
 	
 
 	
 	// generate the refresh token 
 	// this token is regenerate the Access token and it is long time token
-	
 	public String genrateRefreshToken(Users user)
 	{
-		return Jwts.builder()
-				.subject(user.getUserId().toString())
-				.issuedAt(new Date())
-				.expiration(new Date(System.currentTimeMillis()+ 1000*60*60*24*30*3))
-				.signWith(getSecretKey())
-				.compact();
-		
+	    return Jwts.builder()
+	            .subject(user.getUserId().toString())
+	            .issuedAt(new Date())
+	            .expiration(new Date(System.currentTimeMillis() + 1000L*60*60*24*30*3))
+	            .signWith(getSecretKey())
+	            .compact();
 	}
-	
 	
 	// to get UserId from the token
 	

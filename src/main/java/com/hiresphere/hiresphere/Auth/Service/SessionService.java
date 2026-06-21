@@ -27,24 +27,25 @@ public class SessionService {
 	// created the new Session
 	
 	public void genrateNewSession(Users user, String refreshToken)
-	{
+	{ 
 		List<Session> userSession = sessionRepository.findByUser(user);
 		
-		if(userSession.size()== session_limit)
+		if(userSession.size() >= session_limit)
 		{
 			userSession.sort(Comparator.comparing(Session::getLastCreatedAt));
 			
-			Session firstCreatedSession=userSession.get(0);
+			Session firstCreatedSession=userSession.get(0); 
 			sessionRepository.delete(firstCreatedSession);
 			
-			Session newSession = Session.builder()
-					.user(user)
-					.refreshToken(refreshToken)
-					.build();
-			
-			sessionRepository.save(newSession);
 			
 		} 
+		
+		Session newSession = Session.builder()
+				.user(user)
+				.refreshToken(refreshToken)
+				.build();
+		
+		sessionRepository.save(newSession);
 		
 		 
 		
@@ -65,4 +66,26 @@ public class SessionService {
 		sessionRepository.save(session);
 		
 	} 
-}
+	
+	
+	
+	
+	public void logout( String refreshToken) {
+		
+	    Session session = sessionRepository.findByRefreshToken( refreshToken)
+	                    .orElseThrow(() -> new RuntimeException( "Session Not Found"));
+
+	    sessionRepository.delete(session);
+	}
+	
+	
+	
+	
+	public void logoutAllDevices( Users user){
+		
+	    List<Session> sessions = sessionRepository.findByUser(user);
+
+	    sessionRepository.deleteAll(sessions); 
+	} 
+	
+} 
