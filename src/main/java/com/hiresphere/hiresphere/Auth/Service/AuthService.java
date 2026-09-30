@@ -61,7 +61,7 @@ public class AuthService {
 		sessionService.genrateNewSession(user, refreshToken);
 		
 		
-		return new UserLoginResponceDto(user.getUserId(), accessToken, refreshToken) ;
+		return new UserLoginResponceDto(user.getUserId(), accessToken, refreshToken, user.getRole()) ;
 	}
 
 
@@ -83,7 +83,7 @@ public class AuthService {
 		String accsessToken =jwtServiceProvider.genrateAccsessToken(user);
 		
 		
-		return new UserLoginResponceDto(user.getUserId(), accsessToken, refreshToken);
+		return new UserLoginResponceDto(user.getUserId(), accsessToken, refreshToken, user.getRole());
 	}
 
 
@@ -95,40 +95,29 @@ public class AuthService {
 	public void logout( HttpServletRequest request, HttpServletResponse response)
 	{
 	    Cookie[] cookies = request.getCookies();
-	    
 
-	    if(cookies == null)
-	    {
-	        throw new RuntimeException("No Cookies Found");
-	    }
-	    
+	    if (cookies != null) {
+	        String refreshToken = null;
+	        for (Cookie cookie : cookies) {
+	            if ("refreshToken".equals(cookie.getName())) {
+	                refreshToken = cookie.getValue();
+	                break;
+	            }
+	        }
 
-	    String refreshToken = null;
-
-	    for(Cookie cookie : cookies)
-	    {
-	        if(cookie.getName().equals("refreshToken"))
-	        {
-	            refreshToken =cookie.getValue();
-
-	            break;
+	        if (refreshToken != null) {
+	            try {
+	                sessionService.logout(refreshToken);
+	            } catch (Exception e) {
+	                // Session might already be invalidated or expired
+	            }
 	        }
 	    }
 
-	    if(refreshToken == null)
-	    {
-	        throw new RuntimeException( "Refresh Token Not Found");
-	    }
-
-	    sessionService.logout(refreshToken);
-
-	    Cookie deleteCookie = new Cookie("refreshToken",null);
-
+	    Cookie deleteCookie = new Cookie("refreshToken", null);
 	    deleteCookie.setPath("/");
-
 	    deleteCookie.setMaxAge(0);
-
-	    response.addCookie( deleteCookie);
+	    response.addCookie(deleteCookie);
 	}
 
 

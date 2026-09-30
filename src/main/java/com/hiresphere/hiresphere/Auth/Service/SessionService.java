@@ -59,7 +59,7 @@ public class SessionService {
 		
 		Session session=(sessionRepository.findByRefreshToken(refreshToken)
 				.orElseThrow(() -> new SessionAuthenticationException(
-						"The Session is not match for the refresh token"+refreshToken)));
+						"Session not found or expired. Please log in again.")));
 				
 		session.setLastCreatedAt(LocalDateTime.now());
 		
@@ -87,5 +87,19 @@ public class SessionService {
 
 	    sessionRepository.deleteAll(sessions); 
 	} 
-	
+
+	public List<Session> getUserSessions(Users user) {
+	    return sessionRepository.findByUser(user);
+	}
+
+	public void deleteSessionById(Users user, Long sessionId) {
+	    Session session = sessionRepository.findById(sessionId)
+	            .orElseThrow(() -> new RuntimeException("Session not found"));
+
+	    if (!session.getUser().getUserId().equals(user.getUserId())) {
+	        throw new RuntimeException("Unauthorized to terminate this session");
+	    }
+
+	    sessionRepository.delete(session);
+	}
 } 

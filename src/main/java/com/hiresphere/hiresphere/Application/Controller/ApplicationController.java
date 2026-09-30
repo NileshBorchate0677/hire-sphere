@@ -21,22 +21,20 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    
-    
-    
-    
+
     // 1) Apply Job
 
     @PostMapping("/apply/{jobId}")
-    public ResponseEntity<MyApplicationResponseDto>
-    applyJob(
+    public ResponseEntity<MyApplicationResponseDto> applyJob(
             @PathVariable Long jobId,
-            @Valid @RequestBody ApplyJobRequestDto dto)
-    {
+            @RequestBody(required = false) ApplyJobRequestDto dto) {
+
+        if (dto == null) {
+            dto = new ApplyJobRequestDto();
+        }
+
         MyApplicationResponseDto application =
-                applicationService.applyJob(
-                        jobId,
-                        dto);
+                applicationService.applyJob(jobId, dto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -44,15 +42,12 @@ public class ApplicationController {
     }
 
 
-    
-    
-    
     // 2) Get My Applications
 
     @GetMapping("/myApplications")
     public ResponseEntity<List<MyApplicationResponseDto>>
-    getMyApplications()
-    {
+    getMyApplications() {
+
         List<MyApplicationResponseDto> applications =
                 applicationService.getMyApplications();
 
@@ -60,90 +55,99 @@ public class ApplicationController {
     }
 
 
-    
-    
-    
     // 3) Withdraw Application
 
     @DeleteMapping("/withdraw/{applicationId}")
-    public ResponseEntity<String>
-    withdrawApplication(
-            @PathVariable Long applicationId)
-    {
-        applicationService.withdrawApplication(
-                applicationId);
+    public ResponseEntity<String> withdrawApplication(
+            @PathVariable Long applicationId) {
+
+        applicationService.withdrawApplication(applicationId);
 
         return ResponseEntity.ok(
                 "Application withdrawn successfully");
     }
 
 
-    // 4) Recruiter View Applicants
+    // 4) Recruiter View Applicants For Job
 
     @GetMapping("/job/{jobId}")
     public ResponseEntity<List<ApplicantResponseDto>>
     getApplicantsForJob(
-            @PathVariable Long jobId)
-    {
+            @PathVariable Long jobId) {
+
         List<ApplicantResponseDto> applicants =
-                applicationService.getApplicantsForJob(
-                        jobId);
+                applicationService.getApplicantsForJob(jobId);
 
         return ResponseEntity.ok(applicants);
     }
 
-    
-    
-    
 
-    // 5) Shortlist Applicant
+    // 5) Recruiter View Single Application
+
+    @GetMapping("/{applicationId}")
+    public ResponseEntity<ApplicantResponseDto>
+    getApplicationById(
+            @PathVariable Long applicationId) {
+
+        ApplicantResponseDto applicant =
+                applicationService.getApplicationById(
+                        applicationId);
+
+        return ResponseEntity.ok(applicant);
+    }
+
+
+    // 6) Shortlist Applicant
 
     @PatchMapping("/{applicationId}/shortlist")
     public ResponseEntity<ApplicantResponseDto>
     shortlistApplication(
-            @PathVariable Long applicationId)
-    {
+            @PathVariable Long applicationId) {
+
         ApplicantResponseDto applicant =
-                applicationService
-                        .shortlistApplication(
-                                applicationId);
+                applicationService.shortlistApplication(
+                        applicationId);
 
         return ResponseEntity.ok(applicant);
     }
 
 
-    // 6) Accept Applicant
+    // 7) Accept Applicant
 
     @PatchMapping("/{applicationId}/accept")
     public ResponseEntity<ApplicantResponseDto>
     acceptApplication(
-            @PathVariable Long applicationId)
-    {
+            @PathVariable Long applicationId) {
+
         ApplicantResponseDto applicant =
-                applicationService
-                        .acceptApplication(
-                                applicationId);
+                applicationService.acceptApplication(
+                        applicationId);
 
         return ResponseEntity.ok(applicant);
     }
 
-    
-    
-    
-    
 
-    // 7) Reject Applicant
+    // 8) Reject Applicant
 
     @PatchMapping("/{applicationId}/reject")
     public ResponseEntity<ApplicantResponseDto>
     rejectApplication(
-            @PathVariable Long applicationId)
-    {
-        ApplicantResponseDto applicant =
-                applicationService
-                        .rejectApplication(
-                                applicationId);
+            @PathVariable Long applicationId) {
 
+        ApplicantResponseDto applicant =
+                applicationService.rejectApplication(
+                        applicationId);
+
+        return ResponseEntity.ok(applicant);
+    }
+
+    // 9) Update Application Status (Interview Scheduled, Offered, Hired, etc.)
+    @PatchMapping("/{applicationId}/status")
+    public ResponseEntity<ApplicantResponseDto> updateStatus(
+            @PathVariable Long applicationId,
+            @RequestParam com.hiresphere.hiresphere.Application.Enums.ApplicationStatus status) {
+
+        ApplicantResponseDto applicant = applicationService.updateApplicationStatus(applicationId, status);
         return ResponseEntity.ok(applicant);
     }
 }

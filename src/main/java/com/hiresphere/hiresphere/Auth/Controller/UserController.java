@@ -2,6 +2,7 @@ package com.hiresphere.hiresphere.Auth.Controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,10 +64,16 @@ public class UserController {
 		Cookie cookie= new Cookie("refreshToken", responceDto.getRefreshToken());
 		 cookie.setHttpOnly(true);
 		 cookie.setSecure("production".equals(deployEnv));
-		 cookie.setPath("/");                 // VERY IMPORTANT Available for whole website
-		    //cookie.setMaxAge(7 * 24 * 60 * 60);  // 7 days
+		 cookie.setPath("/");
+		 cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days (matches refresh token TTL)
+		 response.addCookie(cookie);
 
-		    response.addCookie(cookie); 
+		 // SameSite=Strict via header (Java Cookie API doesn't support SameSite directly)
+		 if ("production".equals(deployEnv)) {
+		     response.addHeader("Set-Cookie",
+		         "refreshToken=" + responceDto.getRefreshToken()
+		         + "; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=" + (30 * 24 * 60 * 60));
+		 }
 		 
 		return ResponseEntity.ok(responceDto); 
 	} 
@@ -143,4 +150,54 @@ public class UserController {
 	}
 	
 	
-} 
+	// get profile name
+	@GetMapping("/me")
+	public ResponseEntity<UserDto> getCurrentUser() {
+
+	    return ResponseEntity.ok(
+	            userService.getCurrentUser()
+	    );
+	}
+
+	// 7) Update Display Name
+	@PutMapping("/update-name")
+	public ResponseEntity<UserDto> updateName(@Valid @RequestBody com.hiresphere.hiresphere.Auth.Dto.UpdateNameRequestDto dto) {
+	    return ResponseEntity.ok(userService.updateName(dto));
+	}
+
+	// 8) Get Active Sessions
+	@GetMapping("/sessions")
+	public ResponseEntity<java.util.List<com.hiresphere.hiresphere.Auth.Dto.UserSessionResponseDto>> getMySessions() {
+	    return ResponseEntity.ok(userService.getMySessions());
+	}
+
+	// 9) Terminate Specific Session
+	@org.springframework.web.bind.annotation.DeleteMapping("/sessions/{sessionId}")
+	public ResponseEntity<java.util.Map<String, String>> terminateSession(@org.springframework.web.bind.annotation.PathVariable Long sessionId) {
+	    userService.terminateSession(sessionId);
+	    return ResponseEntity.ok(java.util.Map.of("message", "Session terminated successfully"));
+	}
+
+	// 10) Delete Account Permanently
+	@org.springframework.web.bind.annotation.DeleteMapping("/delete-account")
+	public ResponseEntity<java.util.Map<String, String>> deleteAccount(@Valid @RequestBody com.hiresphere.hiresphere.Auth.Dto.DeleteAccountRequestDto dto) {
+	    userService.deleteAccount(dto);
+	    return ResponseEntity.ok(java.util.Map.of("message", "Account and all associated records permanently deleted"));
+	}
+
+	// 11) Forgot Password Request
+	@PostMapping("/forgot-password")
+	public ResponseEntity<com.hiresphere.hiresphere.Auth.Dto.ForgotPasswordResponseDto> forgotPassword(
+	        @Valid @RequestBody com.hiresphere.hiresphere.Auth.Dto.ForgotPasswordRequestDto dto) {
+	    return ResponseEntity.ok(userService.initiatePasswordReset(dto));
+	}
+
+	// 12) Reset Password with Token
+	@PostMapping("/reset-password")
+	public ResponseEntity<java.util.Map<String, String>> resetPassword(
+	        @Valid @RequestBody com.hiresphere.hiresphere.Auth.Dto.ResetPasswordRequestDto dto) {
+	    userService.resetPasswordWithToken(dto);
+	    return ResponseEntity.ok(java.util.Map.of("message", "Password has been successfully reset. Please sign in with your new password."));
+	}
+}
+

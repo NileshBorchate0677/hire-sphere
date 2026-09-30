@@ -2,6 +2,8 @@ package com.hiresphere.hiresphere.Auth.Security;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -20,8 +22,10 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class JwtAtenticationFilter extends OncePerRequestFilter {
-	
-	
+
+	private static final Logger log = LoggerFactory.getLogger(JwtAtenticationFilter.class);
+
+
 	 private final JwtServiceProvider jwtServiceProvider;
 	 private final UserService userService;
 	    
@@ -56,7 +60,7 @@ public class JwtAtenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String token = requestTokenHeader.split("Bearer ")[1];
+            String token = requestTokenHeader.substring(7).trim();
             
             
 
@@ -85,11 +89,11 @@ public class JwtAtenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
 		} catch (Exception e) {
-		    e.printStackTrace(); // DEBUG purpose
+		    log.warn("JWT authentication failed for path {}: {}", request.getServletPath(), e.getMessage());
 		    SecurityContextHolder.clearContext();
 		    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		    response.setContentType("application/json");
-		    response.getWriter().write("{\"error\":\"Invalid or expired access token\"}");
+		    response.getWriter().write("{\"error\":\"Invalid or expired access token\",\"status\":401}");
 		    return;
 		}
 		

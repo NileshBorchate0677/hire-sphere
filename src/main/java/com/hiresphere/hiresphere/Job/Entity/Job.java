@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.hiresphere.hiresphere.Application.Entity.Application;
 import com.hiresphere.hiresphere.Job.Enums.JobStatus;
 import com.hiresphere.hiresphere.Job.Enums.JobType;
+import com.hiresphere.hiresphere.Job.Enums.WorkplaceType;
 import com.hiresphere.hiresphere.Recruiter.Entity.RecruiterProfile;
 
 import jakarta.persistence.*;
@@ -17,7 +19,16 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter 
+@Setter
+@Table(
+        name = "job",
+        indexes = {
+                @Index(name = "idx_job_status", columnList = "status"),
+                @Index(name = "idx_job_location", columnList = "location"),
+                @Index(name = "idx_job_recruiter", columnList = "recruiter_Profile_id"),
+                @Index(name = "idx_job_created_at", columnList = "createdAt")
+        }
+)
 public class Job {
 
     @Id
@@ -53,6 +64,10 @@ public class Job {
     private JobType jobType;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private WorkplaceType workplaceType;
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private JobStatus status;
 
@@ -63,15 +78,17 @@ public class Job {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
+    @Column
+    private LocalDateTime updatedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "recruiter_Profile_id",
             nullable = false
     )
     private RecruiterProfile recruiterProfile;
-    
-    
-    
+
     @OneToMany(mappedBy = "job")
     private List<Application> applications;
 }

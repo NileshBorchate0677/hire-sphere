@@ -2,6 +2,7 @@ package com.hiresphere.hiresphere.Job.Dto;
 
 import java.time.LocalDate;
 
+import com.hiresphere.hiresphere.Job.Enums.JobStatus;
 import com.hiresphere.hiresphere.Job.Enums.JobType;
 
 import jakarta.validation.constraints.*;
@@ -47,7 +48,15 @@ public class CreateJobRequestDto {
     @NotNull(message = "Job type is required")
     private JobType jobType;
 
+    private com.hiresphere.hiresphere.Job.Enums.WorkplaceType workplaceType;
+
     @NotNull(message = "Application deadline is required")
     @Future(message = "Deadline must be a future date")
     private LocalDate applicationDeadline;
+
+    /**
+     * Optional – defaults to OPEN if not provided.
+     * Pass DRAFT to save without publishing.
+     */
+    private JobStatus status;
 }

@@ -22,4 +22,13 @@ public class MyApplicationResponseDto {
     private ApplicationStatus status;
 
     private LocalDateTime appliedAt;
+
+    // Helper getter for compatibility
+    public Long getId() {
+        return this.applicationId;
+    }
+
+    public void setId(Long id) {
+        this.applicationId = id;
+    }
 }

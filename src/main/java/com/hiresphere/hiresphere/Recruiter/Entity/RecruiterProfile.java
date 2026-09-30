@@ -56,6 +56,7 @@ public class RecruiterProfile {
 	@Column(updatable = false) 
 	private LocalDateTime createdAt;
 
+	// unique is because to login proper Authenticate user from the Auth Module 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false, unique = true)
 	private Users user;

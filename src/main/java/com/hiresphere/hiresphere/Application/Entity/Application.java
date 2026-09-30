@@ -24,6 +24,11 @@ import lombok.Setter;
                                 "job_seeker_profile_id"
                         }
                 )
+        },
+        indexes = {
+                @Index(name = "idx_app_job", columnList = "job_id"),
+                @Index(name = "idx_app_seeker", columnList = "job_seeker_profile_id"),
+                @Index(name = "idx_app_status", columnList = "status")
         }
 )
 public class Application {
@@ -38,6 +43,9 @@ public class Application {
 
     @Column(length = 1000)
     private String coverLetter;
+
+    @Column(length = 500)
+    private String appliedResumeUrl;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

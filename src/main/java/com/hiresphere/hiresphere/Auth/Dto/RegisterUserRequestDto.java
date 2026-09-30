@@ -17,19 +17,29 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RegisterUserRequestDto {
 
-	@NotBlank(message = " name is required")
+	@NotBlank(message = "Name is required")
 	private String name;
 	
 	@Email(message = "Invalid Email Format")
-	@NotBlank(message = "email is required")
+	@NotBlank(message = "Email is required")
 	private String email;
 	
-	@NotBlank(message = "password is required")
-	@Size(min =8, message = "Password must be At least 8 chacters ")
+	@NotBlank(message = "Password is required")
+	@Size(min = 6, message = "Password must be at least 6 characters")
 	private String password;
 	
-	@NotNull(message = "the role is required")
+	@NotNull(message = "The role is required")
 	private UserRoles role;
+
+	public void setFullName(String fullName) {
+		if (this.name == null || this.name.isBlank()) {
+			this.name = fullName;
+		}
+	}
+
+	public String getFullName() {
+		return this.name;
+	}
 	
 	
 	

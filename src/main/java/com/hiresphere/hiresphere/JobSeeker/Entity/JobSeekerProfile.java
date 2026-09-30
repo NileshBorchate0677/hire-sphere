@@ -49,27 +49,128 @@ public class JobSeekerProfile {
     private String summary;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Qualification highestQualification;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = true, length = 200)
     private String collegeName;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = true, length = 500)
     private String resumeUrl;
+
+    @Column(length = 255)
+    private String resumeFileName;
+
+    @Column(length = 150)
+    private String currentDesignation;
+
+    @Column(length = 150)
+    private String currentCompany;
+
+    private Double currentSalary;
+
+    private Double expectedSalary;
+
+    @Column(length = 500)
+    private String preferredLocation;
+
+    @Column(length = 150)
+    private String course;
+
+    private Integer passingYear;
+
+    @Column(length = 50)
+    private String noticePeriod;
+
+    @Column(length = 255)
+    private String githubUrl;
+
+    @Column(length = 255)
+    private String linkedinUrl;
+
+    @Column(length = 255)
+    private String portfolioUrl;
+
+    // Naukri Career Profile Fields
+    @Column(length = 150)
+    private String currentIndustry;
+
+    @Column(length = 150)
+    private String department;
+
+    @Column(length = 150)
+    private String roleCategory;
+
+    @Column(length = 50)
+    private String desiredJobType;
+
+    @Column(length = 50)
+    private String desiredEmploymentType;
+
+    @Column(length = 50)
+    private String preferredWorkMode;
+
+    @Column(length = 50)
+    private String preferredShift;
+
+    // Naukri Personal Details Fields
+    @Column(length = 30)
+    private String dateOfBirth;
+
+    @Column(length = 50)
+    private String maritalStatus;
+
+    @Column(length = 100)
+    private String hometown;
+
+    @Column(length = 15)
+    private String pincode;
+
+    @Column(length = 500)
+    private String permanentAddress;
+
+    @Column(length = 500)
+    private String languagesKnown;
+
+    private Boolean differentlyAbled;
+
+    private Boolean careerBreak;
 
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "user_id", 
+            name = "user_id",
             nullable = false,
             unique = true
     )
     private Users user;
-    
+
+
+    @OneToMany(
+            mappedBy = "jobSeekerProfile",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<JobSeekerEducation> educations;
+
+    @OneToMany(
+            mappedBy = "jobSeekerProfile",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<JobSeekerProject> projects;
+
+    @OneToMany(
+            mappedBy = "jobSeekerProfile",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<JobSeekerExperience> experiences;
+
     @OneToMany(mappedBy = "jobSeekerProfile")
     private List<Application> applications;
 }

@@ -8,7 +8,9 @@ import com.hiresphere.hiresphere.Application.DTO.MyApplicationResponseDto;
 
 public interface ApplicationService {
 
+    // =========================
     // Job Seeker
+    // =========================
 
     MyApplicationResponseDto applyJob(
             Long jobId,
@@ -21,22 +23,36 @@ public interface ApplicationService {
             Long applicationId);
 
 
-
+    // =========================
     // Recruiter
+    // =========================
 
     List<ApplicantResponseDto>
     getApplicantsForJob(
             Long jobId);
 
+
+    ApplicantResponseDto
+    getApplicationById(
+            Long applicationId);
+
+
     ApplicantResponseDto
     shortlistApplication(
             Long applicationId);
+
 
     ApplicantResponseDto
     acceptApplication(
             Long applicationId);
 
+
     ApplicantResponseDto
     rejectApplication(
             Long applicationId);
+
+    ApplicantResponseDto
+    updateApplicationStatus(
+            Long applicationId,
+            com.hiresphere.hiresphere.Application.Enums.ApplicationStatus newStatus);
 }
