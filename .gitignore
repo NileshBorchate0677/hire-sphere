@@ -1,6 +1,7 @@
 HELP.md
 target/
 uploads/
+*.sql
 *.ps1
 *.mjs
 .mvn/wrapper/maven-wrapper.jar
