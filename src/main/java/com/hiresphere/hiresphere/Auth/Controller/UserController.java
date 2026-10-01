@@ -61,53 +61,39 @@ public class UserController {
 	{
 		UserLoginResponceDto responceDto =authService.userSignIn(loginUserRequestDto);
 		
-		Cookie cookie= new Cookie("refreshToken", responceDto.getRefreshToken());
-		 cookie.setHttpOnly(true);
-		 cookie.setSecure("production".equals(deployEnv));
-		 cookie.setPath("/");
-		 cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days (matches refresh token TTL)
-		 response.addCookie(cookie);
-
-		 // SameSite=Strict via header (Java Cookie API doesn't support SameSite directly)
-		 if ("production".equals(deployEnv)) {
-		     response.addHeader("Set-Cookie",
-		         "refreshToken=" + responceDto.getRefreshToken()
-		         + "; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=" + (30 * 24 * 60 * 60));
-		 }
-		 
+		String sameSiteSetting = "production".equals(deployEnv) ? "None" : "Lax";
+		boolean isSecure = "production".equals(deployEnv);
+		String cookieHeader = "refreshToken=" + responceDto.getRefreshToken()
+				+ "; Path=/; HttpOnly"
+				+ (isSecure ? "; Secure; SameSite=None; Partitioned" : "; SameSite=Lax")
+				+ "; Max-Age=" + (30 * 24 * 60 * 60);
+		response.addHeader("Set-Cookie", cookieHeader);
+		
 		return ResponseEntity.ok(responceDto); 
 	} 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	//3) REST APi for the Refresh the AccessToken
-	
 	@PostMapping("/refresh")
 	public ResponseEntity<UserLoginResponceDto> refresh(HttpServletRequest request)
 	{
-		if (request.getCookies() == null) {
-	        throw new AuthenticationServiceException("No cookies found");
-	    } 
+		String refreshToken = null;
+		if (request.getCookies() != null) {
+			refreshToken = Arrays.stream(request.getCookies())
+					.filter(c -> "refreshToken".equals(c.getName()))
+					.findFirst()
+					.map(Cookie::getValue)
+					.orElse(null);
+		}
+
+		if (refreshToken == null || refreshToken.isBlank()) {
+			refreshToken = request.getHeader("X-Refresh-Token");
+		}
+
+		if (refreshToken == null || refreshToken.isBlank()) {
+			throw new AuthenticationServiceException("Refresh token is required");
+		}
 		
-		String refreshToken =Arrays.stream(request.getCookies())
-				.filter(Cookie -> "refreshToken".equals(Cookie.getName()))
-				.findFirst()
-				.map(Cookie::getValue) 
-				.orElseThrow( () -> new AuthenticationServiceException
-						("refresh token inside the cookie is not found"
-						));
-		
-		
-	UserLoginResponceDto	 loginResponceDto=authService.refresh(refreshToken);
-		
+		UserLoginResponceDto loginResponceDto = authService.refresh(refreshToken);
 		return ResponseEntity.ok(loginResponceDto);
 	}
 	
